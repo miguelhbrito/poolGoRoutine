@@ -1,2 +1,3 @@
 # poolGoRoutine
-![](images/antsGoRoutine.jpg)
+
+<img scr="images/antsGoRoutineWithoutBG.png" class="center"> 
