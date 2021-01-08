@@ -55,7 +55,7 @@ func TestPoolWithFuncWaitToGet(t *testing.T) {
 		//Apos a execução deixa a goroutine como disponivel
 		wg.Done()
 	})
-	//Defer para release para cada goroutine
+	//Defer para release na pool
 	defer p.Release()
 
 	for i := 0; i < jobSize; i++ {
@@ -80,7 +80,7 @@ func TestPoolWaitToGetWorker(t *testing.T) {
 	var wg sync.WaitGroup
 	// Cria uma pool de 1000 goroutine
 	p, _ := ants.NewPool(poolSize)
-	//Defer para release para cada goroutine
+	//Defer para release na pool
 	defer p.Release()
 
 	for i := 0; i < jobSize; i++ {
