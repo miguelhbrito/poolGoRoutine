@@ -21,7 +21,7 @@ func ApiWorker() {
 	if err != nil {
 		log.Fatal().Err(err)
 	}
-	secs := time.Since(start).Seconds()
+	secs := time.Since(start).Milliseconds()
 
 	defer resp.Body.Close()
 	_, err = ioutil.ReadAll(resp.Body)
@@ -29,5 +29,5 @@ func ApiWorker() {
 		return
 	}
 
-	log.Info().Msgf("%.2f worker %d finished", secs, id)
+	log.Info().Msgf("%v worker %d finished", secs, id)
 }

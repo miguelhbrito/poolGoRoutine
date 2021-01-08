@@ -25,7 +25,7 @@ func myHandlerServer(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 func myHandlerServerTwo(w http.ResponseWriter, r *http.Request, ps httprouter.Params){
 	id := ps.ByName("id")
 	log.Printf("received goroutine id %s\n", id)
-	time.Sleep(time.Second * 3)
+	time.Sleep(time.Millisecond * 100)
 
 	data := fmt.Sprintf("done %s", id)
 	w.Header().Add("Content-Type", "application/json")

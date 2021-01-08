@@ -24,7 +24,7 @@ const (
 
 const (
 	poolSize = 1000
-	jobSize = 10000
+	jobSize = 100000
 )
 
 var curMem uint64
@@ -52,7 +52,7 @@ func TestGoroutineWorkers(t *testing.T) {
 	mem := runtime.MemStats{}
 	runtime.ReadMemStats(&mem)
 	curMem = mem.TotalAlloc/MiB - curMem
-	fmt.Printf("\n%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
 	fmt.Printf("memoria usada:%d MB", curMem)
 }
 
@@ -86,7 +86,7 @@ func TestGoroutineWithoutWorkersWithHttpRequest(t *testing.T){
 	mem := runtime.MemStats{}
 	runtime.ReadMemStats(&mem)
 	curMem = mem.TotalAlloc/MiB - curMem
-	fmt.Printf("\n%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
 	fmt.Printf("memoria usada:%d MB", curMem)
 }
 
@@ -133,7 +133,7 @@ func TestGoroutineWorkersWithHttpRequest(t *testing.T){
 	mem := runtime.MemStats{}
 	runtime.ReadMemStats(&mem)
 	curMem = mem.TotalAlloc/MiB - curMem
-	fmt.Printf("\n%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
 	fmt.Printf("memoria usada:%d MB", curMem)
 
 }
@@ -171,7 +171,7 @@ func TestAntsPoolWithHttpRequest(t *testing.T){
 	mem := runtime.MemStats{}
 	runtime.ReadMemStats(&mem)
 	curMem = mem.TotalAlloc/MiB - curMem
-	fmt.Printf("\n%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
 	fmt.Printf("memoria usada:%d MB", curMem)
 }
 
@@ -196,7 +196,7 @@ func TestPoolWithFuncWaitToGet(t *testing.T) {
 	mem := runtime.MemStats{}
 	runtime.ReadMemStats(&mem)
 	curMem = mem.TotalAlloc/MiB - curMem
-	fmt.Printf("\n%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
 	fmt.Printf("memoria usada:%d MB", curMem)
 }
 
@@ -222,7 +222,7 @@ func TestPoolWaitToGetWorker(t *testing.T) {
 	mem := runtime.MemStats{}
 	runtime.ReadMemStats(&mem)
 	curMem = mem.TotalAlloc/MiB - curMem
-	fmt.Printf("\n%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
 	fmt.Printf("memoria usada:%d MB", curMem)
 }
 
@@ -251,7 +251,7 @@ func TestPoolWaitToGetWorkerWith2Submits(t *testing.T) {
 	mem := runtime.MemStats{}
 	runtime.ReadMemStats(&mem)
 	curMem = mem.TotalAlloc/MiB - curMem
-	fmt.Printf("\n%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
 	fmt.Printf("memoria usada:%d MB", curMem)
 }
 
@@ -275,7 +275,78 @@ func TestPoolWaitToGetWorkerPreMalloc(t *testing.T) {
 	mem := runtime.MemStats{}
 	runtime.ReadMemStats(&mem)
 	curMem = mem.TotalAlloc/MiB - curMem
-	fmt.Printf("\n%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
 	fmt.Printf("memoria usada:%d MB", curMem)
 }
 
+//-------------------------------------------------------------------------------------------
+// Go routines para testes
+//-------------------------------------------------------------------------------------------
+
+func TestNoPool(t *testing.T) {
+	start := time.Now()
+	var wg sync.WaitGroup
+	for i := 0; i < jobSize; i++ {
+		wg.Add(1)
+		go func() {
+			exemplo7.ApiWorker()
+			wg.Done()
+		}()
+	}
+
+	wg.Wait()
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
+	mem := runtime.MemStats{}
+	runtime.ReadMemStats(&mem)
+	curMem = mem.TotalAlloc/MiB - curMem
+	t.Logf("memory usage:%d MB", curMem)
+}
+
+func TestAntsPool(t *testing.T) {
+	start := time.Now()
+	defer ants.Release()
+	var wg sync.WaitGroup
+	for i := 0; i < jobSize; i++ {
+		wg.Add(1)
+		_ = ants.Submit(func() {
+			exemplo7.ApiWorker()
+			wg.Done()
+		})
+	}
+	wg.Wait()
+
+	t.Logf("pool, capacity:%d", ants.Cap())
+	t.Logf("pool, running workers number:%d", ants.Running())
+	t.Logf("pool, free workers number:%d", ants.Free())
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
+
+	mem := runtime.MemStats{}
+	runtime.ReadMemStats(&mem)
+	curMem = mem.TotalAlloc/MiB - curMem
+	t.Logf("memory usage:%d MB", curMem)
+}
+
+func TestAntsPoolGo(t *testing.T) {
+	start := time.Now()
+	var wg sync.WaitGroup
+	p, _ := ants.NewPool(poolSize)
+	defer p.Release()
+	for i := 0; i < jobSize; i++ {
+		wg.Add(1)
+		_ = p.Submit(func() {
+			exemplo7.ApiWorker()
+			wg.Done()
+		})
+	}
+	wg.Wait()
+
+	t.Logf("pool, capacity:%d", p.Cap())
+	t.Logf("pool, running workers number:%d", p.Running())
+	t.Logf("pool, free workers number:%d", p.Free())
+	fmt.Printf("\n%v milliseconds elapsed\n", time.Since(start).Milliseconds())
+
+	mem := runtime.MemStats{}
+	runtime.ReadMemStats(&mem)
+	curMem = mem.TotalAlloc/MiB - curMem
+	t.Logf("memory usage:%d MB", curMem)
+}
