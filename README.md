@@ -165,6 +165,34 @@ func main() {
 ```
 
 ## Testes Goroutine Workers X Ants 
+```powershell
+// 100000 JOBS
+
+//------- No pool and ants
+TestNoPool: poolGoRoutine_test.go:300: memory usage:1482 MB
+26648 milliseconds elapsed -- 26 seconds
+
+//------- With ants, native pool ants
+25740 milliseconds elapsed -- 26 seconds
+TestAntsPool: poolGoRoutine_test.go:315: pool, capacity:2147483647
+TestAntsPool: poolGoRoutine_test.go:316: pool, running workers number:1580
+TestAntsPool: poolGoRoutine_test.go:317: pool, free workers number:2147482067
+TestAntsPool: poolGoRoutine_test.go:322: memory usage:1502 MB
+
+//------- With ants, with a setted pool 10000
+32453 milliseconds elapsed -- 32 seconds
+TestAntsPoolGo: poolGoRoutine_test.go:338: pool, capacity:10000
+TestAntsPoolGo: poolGoRoutine_test.go:339: pool, running workers number:5029
+TestAntsPoolGo: poolGoRoutine_test.go:340: pool, free workers number:4971
+TestAntsPoolGo: poolGoRoutine_test.go:345: memory usage:1196 MB
+
+//------- With ants, with a setted pool 1000
+301014 milliseconds elapsed -- 301 seconds
+TestAntsPoolGo: poolGoRoutine_test.go:343: pool, capacity:1000
+TestAntsPoolGo: poolGoRoutine_test.go:344: pool, running workers number:1000
+TestAntsPoolGo: poolGoRoutine_test.go:345: pool, free workers number:0
+TestAntsPoolGo: poolGoRoutine_test.go:351: memory usage:796 MB
+```
 
 ## Conclusão
-Usando a lib ants, o processo de implementação da pool bem como a manutenção facilitam mais a implementação com a opção de workers nativamente. E mostra-se tambem uma melhor performace e com menos consumo de memoria. 
+Usando a lib ants o processo de implementação da pool bem como a manutenção facilitam mais a implementação do que a opção de workers nativamente, dado que para a implementação dos workers nativamente talvez seja necessario a alteração da função para o uso. E mostra-se tambem uma melhor performace e com menos consumo de memoria. 
