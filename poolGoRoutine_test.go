@@ -8,7 +8,6 @@ import (
 	"github.com/poolGoRoutine/exemplo5"
 	"github.com/poolGoRoutine/exemplo6"
 	"github.com/poolGoRoutine/exemplo7"
-	"os"
 	"runtime"
 	"sync"
 	"testing"
@@ -29,11 +28,6 @@ const (
 )
 
 var curMem uint64
-
-func TestMain(m *testing.M) {
-	valExit := m.Run()
-	os.Exit(valExit)
-}
 
 //usando o conceito de workers do proprio golang
 func TestGoroutineWorkers(t *testing.T) {
@@ -221,6 +215,37 @@ func TestPoolWaitToGetWorker(t *testing.T) {
 			wg.Done()
 		})
 	}
+
+
+	wg.Wait()
+	fmt.Printf("pool go routine, workers:%d", p.Running())
+	mem := runtime.MemStats{}
+	runtime.ReadMemStats(&mem)
+	curMem = mem.TotalAlloc/MiB - curMem
+	fmt.Printf("\n%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("memoria usada:%d MB", curMem)
+}
+
+func TestPoolWaitToGetWorkerWith2Submits(t *testing.T) {
+	start := time.Now()
+	var wg sync.WaitGroup
+	p, _ := ants.NewPool(poolSize)
+	defer p.Release()
+
+	for i := 0; i < jobSize; i++ {
+		wg.Add(1)
+		_ = p.Submit(func() {
+			exemplo7.ApiWorker()
+			wg.Done()
+		})
+
+		wg.Add(1)
+		_ = p.Submit(func() {
+			exemplo6.ApiWorker(i)
+			wg.Done()
+		})
+	}
+
 	wg.Wait()
 	fmt.Printf("pool go routine, workers:%d", p.Running())
 	mem := runtime.MemStats{}

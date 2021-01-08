@@ -1,14 +1,14 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"log"
-	"net/http"
-	"os"
-	"time"
+"encoding/json"
+"fmt"
+"log"
+"net/http"
+"os"
+"time"
 
-	"github.com/julienschmidt/httprouter"
+"github.com/julienschmidt/httprouter"
 )
 
 func myHandlerServer(w http.ResponseWriter, r *http.Request, ps httprouter.Params){
@@ -44,3 +44,4 @@ func main() {
 		os.Exit(1)
 	}
 }
+

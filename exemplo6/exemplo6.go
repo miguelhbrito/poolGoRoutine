@@ -9,7 +9,7 @@ import (
 )
 
 func ApiWorker(id interface{}) {
-	log.Info().Msgf("worker %d begin", id)
+	log.Info().Msgf("exemplo 6 worker %d begin", id)
 	url := fmt.Sprintf("http://localhost:8080/two/%d", id)
 
 	start := time.Now()

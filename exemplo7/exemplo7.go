@@ -12,7 +12,7 @@ var id = 0
 
 func ApiWorker() {
 	id++
-	log.Info().Msgf("worker %d begin", id)
+	log.Info().Msgf("exemplo 7 worker %d begin", id)
 
 	url := fmt.Sprintf("http://localhost:8080/two/%d", id)
 
