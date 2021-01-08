@@ -52,10 +52,10 @@ func TestPoolWithFuncWaitToGet(t *testing.T) {
 	//Cria uma pool de 1000 goroutine com uma função pre estabelecida
 	p, _ := ants.NewPoolWithFunc(poolSize, func(i interface{}) {
 		exemplo6.ApiWorker(i)
-		//Apos a execução faz a release da goroutine
+		//Apos a execução deixa a goroutine como disponivel
 		wg.Done()
 	})
-	//Defer para cada goroutine
+	//Defer para release para cada goroutine
 	defer p.Release()
 
 	for i := 0; i < jobSize; i++ {
@@ -80,7 +80,7 @@ func TestPoolWaitToGetWorker(t *testing.T) {
 	var wg sync.WaitGroup
 	// Cria uma pool de 1000 goroutine
 	p, _ := ants.NewPool(poolSize)
-	//Defer para cada goroutine
+	//Defer para release para cada goroutine
 	defer p.Release()
 
 	for i := 0; i < jobSize; i++ {
@@ -89,7 +89,7 @@ func TestPoolWaitToGetWorker(t *testing.T) {
 		//Delega a função para as goroutines na pool
 		_ = p.Submit(func() {
 			exemplo7.ApiWorker()
-			//Apos a execução faz a release da goroutine
+			//Apos a execução deixa a goroutine como disponivel
 			wg.Done()
 		})
 	}
@@ -107,24 +107,17 @@ func TestPoolWaitToGetWorker(t *testing.T) {
 ### Mude a capacidade da pool em tempo de execução
 
 ``` go
-pool.Tune(1000) // 
-pool.Tune(100000) //
+pool.Tune(1000) 
+pool.Tune(100000) 
 ```
 
 *thread-safe.
 
 ### Pre-malloc goroutine 
 
-
 ```go
 // ants vai pre alocar toda a capacidade da pool quando o metodo for invocado
 p, _ := ants.NewPool(100000, ants.WithPreAlloc(true))
-```
-
-### Liberar a pool
-
-```go
-pool.Release()
 ```
 
 ### Reiniciar a pool
