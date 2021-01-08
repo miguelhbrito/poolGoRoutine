@@ -137,7 +137,7 @@ Quando se trata de gerenciamento de memoria Go trata de muitas coisas por voce, 
 
 Goroutines é um tipo comum de vazamento de memoria. Se voce startar uma Goroutine, voce espera que eventualmente termine mas nunca acontece e com isso acontece vazamento de memoria. A Goroutine tem o ciclo de memoria igual ao da aplicação e qualquer memoria alocada para Goroutines não pode ser released. Nunca comece uma Goroutine sem saber como ela vai parar.
 
-Para prevenir tais eventualidades podemos usar WaitGroups. Para cada gorountine utiliza-se o waitGroup.Add(i), i podendo adotar -1, 0 ou 1. 
+Para prevenir tais eventualidades podemos usar WaitGroups. Para cada gorountine utiliza-se o waitGroup.Add(i), i podendo adotar -1, 0 ou 1, waitGroup.Done() e waitGroup.Wait(). 
 
 ```go
 package main
