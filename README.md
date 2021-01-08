@@ -1,4 +1,5 @@
 # Pool goroutine
+![](images/differencesThreadXGoroutine.png)
 ![](images/antsGoRoutineWithoutBG.png)
 
 ## 🧰 Instalação
