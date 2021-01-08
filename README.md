@@ -128,6 +128,7 @@ pool.Release()
 
 ```go
 pool.Reboot()
+```
 
 ## Memory Leak
 
