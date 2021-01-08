@@ -164,5 +164,7 @@ func main() {
 }
 ```
 
-### Conclusão
+## Testes Goroutine Workers X Ants 
+
+## Conclusão
 Usando a lib ants, o processo de implementação da pool bem como a manutenção facilitam mais a implementação com a opção de workers nativamente. E mostra-se tambem uma melhor performace e com menos consumo de memoria. 
