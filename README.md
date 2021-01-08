@@ -164,7 +164,7 @@ func main() {
 }
 ```
 
-## Testes Goroutine Workers X Ants 
+## Testes Goroutine X Ants 
 ```powershell
 // 100000 JOBS
 
