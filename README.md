@@ -47,17 +47,24 @@ var curMem uint64
 
 func TestPoolWithFuncWaitToGet(t *testing.T) {
 	start := time.Now()
+	//Cria a waitGroup 
 	var wg sync.WaitGroup
+	//Cria uma pool de 1000 goroutine com uma função pre estabelecida
 	p, _ := ants.NewPoolWithFunc(poolSize, func(i interface{}) {
 		exemplo6.ApiWorker(i)
+		//Apos a execução faz a release da goroutine
 		wg.Done()
 	})
+	//Defer para cada goroutine
 	defer p.Release()
 
 	for i := 0; i < jobSize; i++ {
+		//Adiciona a goroutine ao sync
 		wg.Add(1)
+		//Invoca a pool com as goroutines
 		_ = p.Invoke(i)
 	}
+	//Coloca em espera ate finalizar todas as goroutines
 	wg.Wait()
 	fmt.Printf("pool go routine, workers:%d", p.Running())
 	mem := runtime.MemStats{}
@@ -69,17 +76,24 @@ func TestPoolWithFuncWaitToGet(t *testing.T) {
 
 func TestPoolWaitToGetWorker(t *testing.T) {
 	start := time.Now()
+	//Cria a waitGroup 
 	var wg sync.WaitGroup
+	// Cria uma pool de 1000 goroutine
 	p, _ := ants.NewPool(poolSize)
+	//Defer para cada goroutine
 	defer p.Release()
 
 	for i := 0; i < jobSize; i++ {
+		//Adiciona a goroutine ao sync
 		wg.Add(1)
+		//Delega a função para as goroutines na pool
 		_ = p.Submit(func() {
 			exemplo7.ApiWorker()
+			//Apos a execução faz a release da goroutine
 			wg.Done()
 		})
 	}
+	//Coloca em espera ate finalizar todas as goroutines
 	wg.Wait()
 	fmt.Printf("pool go routine, workers:%d", p.Running())
 	mem := runtime.MemStats{}
@@ -88,18 +102,6 @@ func TestPoolWaitToGetWorker(t *testing.T) {
 	fmt.Printf("\n%.2fs elapsed\n", time.Since(start).Seconds())
 	fmt.Printf("memoria usada:%d MB", curMem)
 }
-```
-### Criar uma pool com tamanho customizado
-
-``` go
-// Cria uma pool de 10000 goroutine
-p, _ := ants.NewPool(10000)
-```
-
-### Delegue funções
-
-```go
-ants.Submit(func(){})
 ```
 
 ### Mude a capacidade da pool em tempo de execução
