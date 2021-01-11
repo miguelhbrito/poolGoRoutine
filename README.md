@@ -4,7 +4,7 @@
 
 ## Objetivo
 
-Pesquisa sobre formas de implementação de pool thread (pool go routine) na linguagem go. Golang não tem mecanismos nativos para tal, visto isso, terceiros desenvolveram libs para se utilizarem de pool de go routine.
+Pesquisa sobre formas de implementação de pool thread (pool go routine) na linguagem go. Golang não tem mecanismos nativos para tal, visto isso, terceiros desenvolveram libs para se utilizarem de pool de go routine.\
 Então, o objetivo estabelecido foi estudar e fazer uma prova de conceito da lib escolhida e levando em consideração a performace, uso de memoria e tempo.
 Lib escolhida para estudo : Ants.
 
@@ -205,6 +205,6 @@ Usando a lib ants o processo de implementação da pool bem como a manutenção 
 
 ## Referencia
 
--https://github.com/panjf2000/ants#-performance-summary
--https://www.geeksforgeeks.org/golang-goroutine-vs-thread/
+-https://github.com/panjf2000/ants#-performance-summary \
+-https://www.geeksforgeeks.org/golang-goroutine-vs-thread/ \
 -https://www.ardanlabs.com/blog/2018/11/goroutine-leaks-the-forgotten-sender.html
