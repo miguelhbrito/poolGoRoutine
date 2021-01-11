@@ -2,6 +2,12 @@
 ![](images/differencesThreadXGoroutine.png)
 ![](images/antsGoRoutineWithoutBG.png)
 
+## Objetivo
+
+Pesquisa sobre formas de implementação de pool thread (pool go routine) na linguagem go. Golang não tem mecanismos nativos para tal, visto isso, terceiros desenvolveram libs para se utilizarem de pool de go routine.
+Então, o objetivo estabelecido foi estudar e fazer uma prova de conceito da lib escolhida e levando em consideração a performace, uso de memoria e tempo.
+Lib escolhida para estudo : Ants.
+
 ## 🧰 Instalação
 
 ### v1
@@ -133,7 +139,7 @@ Quando se trata de gerenciamento de memoria Go trata de muitas coisas por voce, 
 
 Goroutines é um tipo comum de vazamento de memoria. Se voce startar uma Goroutine, voce espera que eventualmente termine mas nunca acontece e com isso acontece vazamento de memoria. A Goroutine tem o ciclo de memoria igual ao da aplicação e qualquer memoria alocada para Goroutines não pode ser released. Nunca comece uma Goroutine sem saber como ela vai parar.
 
-Para prevenir tais eventualidades podemos usar WaitGroups. Para cada gorountine utiliza-se o waitGroup.Add(i), i podendo adotar -1, 0 ou 1, waitGroup.Done() e waitGroup.Wait(). 
+Para prevenir tais eventualidades podemos usar WaitGroups. Para cada gorountine utiliza-se o waitGroup.Add(i), i podendo adotar -1, 0 ou 1, waitGroup.Done() e waitGroup.Wait(). Se utilizar do waitGroup não evita o vazamento de memoria, mas reduz muito a possibilidade e tem facil utilização.
 
 ```go
 package main
@@ -196,3 +202,9 @@ TestAntsPoolGo: poolGoRoutine_test.go:351: memory usage:796 MB
 
 ## Conclusão
 Usando a lib ants o processo de implementação da pool bem como a manutenção facilitam mais a implementação do que a opção de workers nativamente, dado que para a implementação dos workers nativamente talvez seja necessario a alteração da função para o uso. E mostra-se tambem uma melhor performace e com menos consumo de memoria. 
+
+## Referencia
+
+-https://github.com/panjf2000/ants#-performance-summary
+-https://www.geeksforgeeks.org/golang-goroutine-vs-thread/
+-https://www.ardanlabs.com/blog/2018/11/goroutine-leaks-the-forgotten-sender.html
